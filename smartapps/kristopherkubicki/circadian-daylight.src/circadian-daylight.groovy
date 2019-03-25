@@ -120,17 +120,13 @@ private def initialize() {
 def scheduleTurnOn() {
     def int iterRate = 20
     
-    // get sunrise and sunset times
+    // Get sunrise and sunset times for the current day
     def sunRiseSet = getSunriseAndSunset()
     def sunriseTime = sunRiseSet.sunrise
-    log.debug("sunrise time ${sunriseTime}")
+    log.debug("Today's sunrise time ${sunriseTime}")
     def sunsetTime = sunRiseSet.sunset
-    log.debug("sunset time ${sunsetTime}")
-    
-    if(sunriseTime.time > sunsetTime.time) {
-        sunriseTime = new Date(sunriseTime.time - (24 * 60 * 60 * 1000))
-    }
-    
+    log.debug("Today's sunset time ${sunsetTime}")
+        
     def runTime = new Date(now() + 60*15*1000)
     for (def i = 0; i < iterRate; i++) {
         def long uts = sunriseTime.time + (i * ((sunsetTime.time - sunriseTime.time) / iterRate))
@@ -152,17 +148,20 @@ def scheduleTurnOn() {
 
 // Poll all bulbs, and modify the ones that differ from the expected state
 def modeHandler(evt) {
+    // Check for any "disable" switches that are turned on
     for (dswitch in dswitches) {
         if(dswitch.currentSwitch == "on") {
             return
         }
     }
     
+    // Get all the current desired values
     def ct = getCT()
     def hex = getHex()
     def hsv = getHSV()
     def bright = getBright()
     
+    // Set all the color temperature bulbs
     for(ctbulb in ctbulbs) {
         if(ctbulb.currentValue("switch") == "on") {
 
@@ -174,6 +173,8 @@ def modeHandler(evt) {
             }
         }
     }
+    
+    // Set all the RGB bulbs
     def color = [hex: hex, hue: hsv.h, saturation: hsv.s, level: bright]
     for(bulb in bulbs) {
         if(bulb.currentValue("switch") == "on") {
@@ -189,6 +190,8 @@ def modeHandler(evt) {
             }
         }
     }
+    
+    // Set all the dimmers
     for(dimmer in dimmers) {
         if(dimmer.currentValue("switch") == "on") {
             if(dimmer.currentValue("level") != bright) {
@@ -212,10 +215,12 @@ def getCTBright() {
     
     // Calculations for during the day
     if(currentTime > after.sunrise.time && currentTime < after.sunset.time) {
+        // Morning
         if(currentTime < midDay) {
             colorTemp = 2700 + ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time) * 3800)
             brightness = ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time))
         }
+        // Afternoon
         else {
             colorTemp = 6500 - ((currentTime - midDay) / (after.sunset.time - midDay) * 3800)
             brightness = 1 - ((currentTime - midDay) / (after.sunset.time - midDay))
