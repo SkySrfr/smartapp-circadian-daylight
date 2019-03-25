@@ -129,7 +129,6 @@ def scheduleTurnOn() {
     
     if(sunriseTime.time > sunsetTime.time) {
         sunriseTime = new Date(sunriseTime.time - (24 * 60 * 60 * 1000))
-	log.debug("adjusted sunrise time ${sunriseTime}")
     }
     
     def runTime = new Date(now() + 60*15*1000)
@@ -166,10 +165,17 @@ def modeHandler(evt) {
     
     for(ctbulb in ctbulbs) {
         if(ctbulb.currentValue("switch") == "on") {
+<<<<<<< HEAD
             if((settings.dbright == true || location.mode in settings.smodes) && ctbulb.currentValue("level") != bright) {    
                 ctbulb.setLevel(bright)
             }
             if(ctbulb.currentValue("colorTemperature") != ct) {   
+=======
+            if((settings.dbright == true || location.mode in settings.smodes) && ctbulb.currentValue("level") != bright) {
+                ctbulb.setLevel(bright)
+            }
+            if(ctbulb.currentValue("colorTemperature") != ct) {
+>>>>>>> parent of 0ae6695... Misc changes
                 ctbulb.setColorTemperature(ct)
             }
         }
@@ -200,17 +206,12 @@ def modeHandler(evt) {
 }
 
 def getCTBright() {
-    // This will get TODAY'S sunrise/sunset. If it is 11PM, time will be > sunrise, but 1AM, time will be < sunrise 	
     def after = getSunriseAndSunset()
     def midDay = after.sunrise.time + ((after.sunset.time - after.sunrise.time) / 2)
     
     def currentTime = now()
-    
-    // Defaults to be used at night (but not in sleep mode)	
-    def float brightness = .1
-    def int colorTemp = 2200
-	
-    // Calculations for daylight hours
+    def float brightness = 1
+    def int colorTemp = 2700
     if(currentTime > after.sunrise.time && currentTime < after.sunset.time) {
         if(currentTime < midDay) {
             colorTemp = 2700 + ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time) * 3800)
@@ -219,18 +220,16 @@ def getCTBright() {
         else {
             colorTemp = 6500 - ((currentTime - midDay) / (after.sunset.time - midDay) * 3800)
             brightness = 1 - ((currentTime - midDay) / (after.sunset.time - midDay))
+            
         }
     }
     
-    // Set brightness to 100% is dynamic brightness is disabled	
     if(settings.dbright == false) {
         brightness = 1
     }
     
-	// If the current mode is one of the selected sleep modes
 	if(location.mode in settings.smodes) {
-		if(currentTime > after.sunset.time || currentTime < after.sunrise.time) {
-			// If campfire mode is disabled
+		if(currentTime > after.sunset.time) {
 			if(settings.dcamp == true) {
 				colorTemp = 6500
 			}
