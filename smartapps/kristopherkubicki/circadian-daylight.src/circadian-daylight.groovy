@@ -222,7 +222,7 @@ def getCTBright() {
         }
     }
     
-    // If dynamic brightness isn't turned on, set brightness to 100%
+    // If dynamic brightness isn't turned on, set brightness to 100
     if(settings.dbright == false) {
         brightness = 1
     }
