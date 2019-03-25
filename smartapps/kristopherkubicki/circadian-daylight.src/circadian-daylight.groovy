@@ -227,7 +227,7 @@ def getCTBright() {
 				colorTemp = 6500
 			}
 			else {
-				colorTemp = 2700
+				colorTemp = 2200
 			}
 		}
 		if(settings.ddim == false) {
