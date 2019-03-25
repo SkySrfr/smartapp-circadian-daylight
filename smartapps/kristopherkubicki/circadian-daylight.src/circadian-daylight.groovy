@@ -218,12 +218,12 @@ def getCTBright() {
         // Morning
         if(currentTime < midDay) {
             colorTemp = 2700 + ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time) * 3800)
-            brightness = ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time))
+            brightness = 0.5 + 0.5*((currentTime - after.sunrise.time) / (midDay - after.sunrise.time))
         }
         // Afternoon
         else {
             colorTemp = 6500 - ((currentTime - midDay) / (after.sunset.time - midDay) * 3800)
-            brightness = 1 - ((currentTime - midDay) / (after.sunset.time - midDay))
+            brightness = 1 - 0.5*((currentTime - midDay) / (after.sunset.time - midDay))
         }
     }
     
