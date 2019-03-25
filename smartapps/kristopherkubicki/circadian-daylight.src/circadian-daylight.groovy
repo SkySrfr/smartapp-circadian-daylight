@@ -207,7 +207,7 @@ def getCTBright() {
     def currentTime = now()
     
     // Defaults to be used at night (but not in sleep mode)
-    def float brightness = .5
+    def float brightness = 0.5
     def int colorTemp = 2200
     
     // Calculations for during the day
