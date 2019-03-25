@@ -165,17 +165,11 @@ def modeHandler(evt) {
     
     for(ctbulb in ctbulbs) {
         if(ctbulb.currentValue("switch") == "on") {
-<<<<<<< HEAD
-            if((settings.dbright == true || location.mode in settings.smodes) && ctbulb.currentValue("level") != bright) {    
-                ctbulb.setLevel(bright)
-            }
-            if(ctbulb.currentValue("colorTemperature") != ct) {   
-=======
+
             if((settings.dbright == true || location.mode in settings.smodes) && ctbulb.currentValue("level") != bright) {
                 ctbulb.setLevel(bright)
             }
             if(ctbulb.currentValue("colorTemperature") != ct) {
->>>>>>> parent of 0ae6695... Misc changes
                 ctbulb.setColorTemperature(ct)
             }
         }
