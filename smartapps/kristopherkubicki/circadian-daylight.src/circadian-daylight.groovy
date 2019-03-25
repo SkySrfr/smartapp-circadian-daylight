@@ -205,8 +205,12 @@ def getCTBright() {
     def midDay = after.sunrise.time + ((after.sunset.time - after.sunrise.time) / 2)
     
     def currentTime = now()
-    def float brightness = 1
-    def int colorTemp = 2700
+    
+    // Defaults to be used at night (but not in sleep mode)
+    def float brightness = .5
+    def int colorTemp = 2200
+    
+    // Calculations for during the day
     if(currentTime > after.sunrise.time && currentTime < after.sunset.time) {
         if(currentTime < midDay) {
             colorTemp = 2700 + ((currentTime - after.sunrise.time) / (midDay - after.sunrise.time) * 3800)
@@ -218,10 +222,12 @@ def getCTBright() {
         }
     }
     
+    // If dynamic brightness isn't turned on, set brightness to 100%
     if(settings.dbright == false) {
         brightness = 1
     }
     
+    // If the hub is currently in one of the selected sleep modes
     if(location.mode in settings.smodes) {
         if(currentTime > after.sunset.time) {
             if(settings.dcamp == true) {
