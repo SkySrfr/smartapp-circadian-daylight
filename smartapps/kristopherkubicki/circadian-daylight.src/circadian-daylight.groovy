@@ -155,7 +155,6 @@ def scheduleTurnOn() {
 def modeHandler(evt) {
     for (dswitch in dswitches) {
         if(dswitch.currentSwitch == "on") {
-	    log.debug "Disable switch (${dswitch.getDisplayName()}) was turned on. Doing nothing."
             return
         }
     }
@@ -168,11 +167,9 @@ def modeHandler(evt) {
     for(ctbulb in ctbulbs) {
         if(ctbulb.currentValue("switch") == "on") {
             if((settings.dbright == true || location.mode in settings.smodes) && ctbulb.currentValue("level") != bright) {    
-		log.debug "Setting brightness of ${ctbulb.getDisplayName} to ${bright}"    
                 ctbulb.setLevel(bright)
             }
-            if(ctbulb.currentValue("colorTemperature") != ct) {
-		log.debug "Setting color temp of ${ctbulb.getDisplayName} to ${ct}"     
+            if(ctbulb.currentValue("colorTemperature") != ct) {   
                 ctbulb.setColorTemperature(ct)
             }
         }
@@ -185,10 +182,10 @@ def modeHandler(evt) {
             	if(settings.dbright == true || location.mode in settings.smodes) { 
 	            	color.value = bright
                 } else {
-					color.value = bulb.currentValue("level")
-				}
+			color.value = bulb.currentValue("level")
+	        }
             	def ret = bulb.setColor(color)
-			}
+	    }
         }
     }
     for(dimmer in dimmers) {
