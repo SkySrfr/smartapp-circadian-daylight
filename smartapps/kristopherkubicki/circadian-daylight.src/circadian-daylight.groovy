@@ -177,21 +177,22 @@ def modeHandler(evt) {
     def color = [hex: hex, hue: hsv.h, saturation: hsv.s, level: bright]
     for(bulb in bulbs) {
         if(bulb.currentValue("switch") == "on") {
-			def tmp = bulb.currentValue("color")
+            def tmp = bulb.currentValue("color")
             if(bulb.currentValue("color") != hex) {
-            	if(settings.dbright == true || location.mode in settings.smodes) { 
-	            	color.value = bright
-                } else {
-			color.value = bulb.currentValue("level")
-	        }
-            	def ret = bulb.setColor(color)
-	    }
+                if(settings.dbright == true || location.mode in settings.smodes) { 
+                    color.value = bright
+                } 
+                else {
+                    color.value = bulb.currentValue("level")
+                }
+                def ret = bulb.setColor(color)
+            }
         }
     }
     for(dimmer in dimmers) {
         if(dimmer.currentValue("switch") == "on") {
-        	if(dimmer.currentValue("level") != bright) {
-            	dimmer.setLevel(bright)
+            if(dimmer.currentValue("level") != bright) {
+                dimmer.setLevel(bright)
             }
         }
     }
@@ -214,7 +215,6 @@ def getCTBright() {
         else {
             colorTemp = 6500 - ((currentTime - midDay) / (after.sunset.time - midDay) * 3800)
             brightness = 1 - ((currentTime - midDay) / (after.sunset.time - midDay))
-            
         }
     }
     
@@ -222,19 +222,19 @@ def getCTBright() {
         brightness = 1
     }
     
-	if(location.mode in settings.smodes) {
-		if(currentTime > after.sunset.time) {
-			if(settings.dcamp == true) {
-				colorTemp = 6500
-			}
-			else {
-				colorTemp = 2200
-			}
-		}
-		if(settings.ddim == false) {
-			brightness = 0.01
-		}
-	}
+    if(location.mode in settings.smodes) {
+        if(currentTime > after.sunset.time) {
+            if(settings.dcamp == true) {
+                colorTemp = 6500
+            }
+            else {
+                colorTemp = 2200
+            }
+        }
+        if(settings.ddim == false) {
+            brightness = 0.01
+        }
+    }
     
     def ct = [:]
     ct = [colorTemp: colorTemp, brightness: Math.round(brightness * 100)]
@@ -242,25 +242,25 @@ def getCTBright() {
 }
 
 def getCT() {
-	def ctb = getCTBright()
+    def ctb = getCTBright()
     //log.debug "Color Temperature: " + ctb.colorTemp
     return ctb.colorTemp
 }
 
 def getHex() {
-	def ct = getCT()
+    def ct = getCT()
     //log.debug "Hex: " + rgbToHex(ctToRGB(ct)).toUpperCase()
     return rgbToHex(ctToRGB(ct)).toUpperCase()
 }
 
 def getHSV() {
-	def ct = getCT()
+    def ct = getCT()
     //log.debug "HSV: " + rgbToHSV(ctToRGB(ct))
     return rgbToHSV(ctToRGB(ct))
 }
 
 def getBright() {
-	def ctb = getCTBright()
+    def ctb = getCTBright()
     //log.debug "Brightness: " + ctb.brightness
     return ctb.brightness
 }
@@ -304,12 +304,12 @@ def ctToRGB(ct) {
 }
 
 def rgbToHex(rgb) {
-	return "#" + Integer.toHexString(rgb.r).padLeft(2,'0') + Integer.toHexString(rgb.g).padLeft(2,'0') + Integer.toHexString(rgb.b).padLeft(2,'0')
+    return "#" + Integer.toHexString(rgb.r).padLeft(2,'0') + Integer.toHexString(rgb.g).padLeft(2,'0') + Integer.toHexString(rgb.b).padLeft(2,'0')
 }
 
 //http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
 def rgbToHSV(rgb) {
-	def h, s, v
+    def h, s, v
     
     def r = rgb.r / 255
     def g = rgb.g / 255
@@ -323,9 +323,9 @@ def rgbToHSV(rgb) {
     //hue
     if(delta == 0) { h = 0}
     else if(max == r) { 
-    	double dub = (g - b) / delta
+        double dub = (g - b) / delta
         h = 60 * (dub % 6)
-	}
+    }
     else if(max == g) { h = 60 * (((b - r) / delta) + 2) }
     else if(max == b) { h = 60 * (((r - g) / delta) + 4) }
     
